@@ -1,0 +1,9 @@
+agent-framework-foundry>=1.0.0
+azure-identity>=1.15.0
+aiohttp>=3.9.0
+requests>=2.31.0
+streamlit>=1.30.0
+python-dotenv>=1.0.0
+
+# Optional: only needed when PII_SHIELD_MODE=library
+# pii-shield>=0.2.0

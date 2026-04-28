@@ -1,0 +1,27 @@
+services:
+  bankingbuddy:
+    build:
+      context: .
+      args:
+        # Set to "library" to bake spaCy + ONNX NER models into the image
+        # for in-process anonymization (~500MB). Default "api" calls a
+        # remote PII Shield service and keeps the image slim.
+        PII_SHIELD_MODE: ${PII_SHIELD_MODE:-api}
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      - NLP_ENGINE=onnx
+      - QUANTIZED_MODEL_DIR=models/onnx-int8
+      # Hardcoded (not ${...}) so .env's PII_SHIELD_API_URL doesn't override it
+      # via compose variable substitution. 'localhost' inside the container
+      # would mean the container itself; we need the host machine.
+      - PII_SHIELD_API_URL=http://host.docker.internal:8000
+    extra_hosts:
+      # Required on Linux for host.docker.internal to resolve to the host
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Share host's az login token cache so AzureCliCredential works
+      # without re-authenticating inside the container.
+      - ${HOME}/.azure:/root/.azure

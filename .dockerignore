@@ -1,0 +1,28 @@
+# Secrets and local config
+.env
+terraform.tfvars
+
+# Virtual environment
+.venv/
+
+# Git
+.git/
+.gitignore
+
+# Terraform state
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Build artifacts
+__pycache__/
+*.egg-info/
+.pytest_cache/
+
+# Local runtime
+.run/
+models/
+
+# IDE
+.vscode/
+.idea/
