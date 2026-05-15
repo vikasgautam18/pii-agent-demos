@@ -1,0 +1,31 @@
+# Local docker deployment of the PII Shield API used by the benchmark.
+#
+# The image is pulled from the registry referenced by ${PII_SHIELD_IMAGE}
+# (see .env.example). Bring the service up with:
+#
+#   cd benchmark/
+#   cp .env.example .env          # then edit PII_SHIELD_IMAGE if needed
+#   docker compose up -d pii-shield
+#   curl -fsS http://localhost:8000/health || echo "service not ready yet"
+#
+# Tear down with:  docker compose down
+#
+# The benchmark itself only needs the service to be reachable at
+# ${PII_SHIELD_API_URL}; you can also point it at a remote instance by
+# editing that env var and skipping `docker compose up`.
+
+services:
+  pii-shield:
+    image: ${PII_SHIELD_IMAGE:?Set PII_SHIELD_IMAGE in .env}
+    container_name: pii-shield-bench
+    ports:
+      - "8000:8000"
+    environment:
+      - NLP_ENGINE=${NLP_ENGINE:-onnx}
+      - QUANTIZED_MODEL_DIR=${QUANTIZED_MODEL_DIR:-models/onnx-int8}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:8000/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10

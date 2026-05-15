@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pii-shield-benchmark"
+version = "0.1.0"
+description = "Benchmark harness comparing agent latency with/without PII Shield middleware (API mode)."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "requests>=2.31",
+    "python-dotenv>=1.0",
+    "tabulate>=0.9",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.8"]
+# For --llm real. The parent bankingbuddy package already pulls these in,
+# so install it editable from the repo root: `pip install -e ..`.
+real = [
+    "agent-framework",
+    "agent-framework-foundry",
+    "azure-identity",
+]
+
+[tool.setuptools.packages.find]
+include = ["pii_bench*"]
